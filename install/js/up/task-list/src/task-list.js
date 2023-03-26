@@ -1,4 +1,4 @@
-import {Type, Tag, Loc} from 'main.core';
+import { Type, Tag} from 'main.core';
 import './task-list.css';
 
 export class TaskList
@@ -29,9 +29,8 @@ export class TaskList
 		this.loadList()
 			.then(taskList => {
 				this.taskList = taskList;
-
 				this.render();
-			})
+			});
 	}
 
 	loadList()
@@ -42,7 +41,7 @@ export class TaskList
 					{
 						data: {
 							pageNumber: 1,
-						}
+						},
 					})
 				.then((response) => {
 					const taskList = response.data.taskList;
@@ -64,13 +63,15 @@ export class TaskList
 				{
 					data: {
 						id: id,
-					}
+					},
 				})
 			.then((response) => {
 				if (response.data != null)
 				{
 					console.error('errors:', response.data);
-				}else{
+				}
+				else
+				{
 					this.reload();
 				}
 
@@ -81,19 +82,22 @@ export class TaskList
 		;
 	}
 
-	createTask(name){
+	createTask(name)
+	{
 		BX.ajax.runAction(
 				'up:tasks.task.createTask',
 				{
 					data: {
 						name: name,
-					}
+					},
 				})
 			.then((response) => {
 				if (response.data != null)
 				{
 					console.error('errors:', response.data);
-				}else{
+				}
+				else
+				{
 					this.reload();
 				}
 
@@ -108,7 +112,7 @@ export class TaskList
 	{
 		this.rootNode.innerHTML = '';
 		const tasksContainerNode = Tag.render`<ul class="task-list"></ul>`;
-		this.taskList.forEach(taskData=>{
+		this.taskList.forEach(taskData => {
 			const taskNode = Tag.render`
 				<li class="task-item" data-task-id = "${taskData.ID}">
 					<span>${taskData.NAME}</span>
@@ -119,15 +123,16 @@ export class TaskList
 		});
 		this.rootNode.appendChild(tasksContainerNode);
 
-
-		const deleteBtns = document.querySelectorAll('.delete-btn');
-		deleteBtns.forEach(btn => {
-			btn.addEventListener('click', () => {
-				const taskId = parseInt(btn.parentNode.getAttribute('data-task-id'));
-				if ( !isNaN(taskId) )
+		const deleteButtons = document.querySelectorAll('.delete-btn');
+		deleteButtons.forEach(button => {
+			button.addEventListener('click', () => {
+				const taskId = parseInt(button.parentNode.getAttribute('data-task-id'));
+				if (!isNaN(taskId))
 				{
 					this.deleteTask(taskId);
-				}else{
+				}
+				else
+				{
 					console.error('Attribute data-task-id of this element is not a number ');
 				}
 			});
@@ -138,7 +143,7 @@ export class TaskList
 		const self = this;
 		enterButton.addEventListener('click', function() {
 			const inputValue = input.value;
-			if ( inputValue.trim() != '')
+			if (inputValue.trim() != '')
 			{
 				self.createTask(inputValue);
 				input.value = '';
