@@ -12,7 +12,7 @@ Add `projector.php` in `routing` section of `${doc_root}/bitrix/.settings.php` f
 
 ```php
 'routing' => ['value' => [
-	'config' => ['projector.php']
+	'config' => ['tasks.php']
 ]],
 ```
 
@@ -39,8 +39,8 @@ You probably want to make following symlinks:
 
 ```
 local\components\up -> local\modules\up.tasks\install\components\up
-local\templates\projector -> local\modules\up.tasks\install\templates\tasks
-local\routes\projector.php -> local\modules\up.tasks\install\routes\tasks.php
+local\templates\tasks -> local\modules\up.tasks\install\templates\tasks
+local\routes\tasks.php -> local\modules\up.tasks\install\routes\tasks.php
 local\js\up -> local\modules\up.tasks\install\js\up
 ```
 
