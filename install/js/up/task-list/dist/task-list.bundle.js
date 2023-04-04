@@ -32,11 +32,7 @@ this.Up = this.Up || {};
 	    key: "loadList",
 	    value: function loadList() {
 	      return new Promise(function (resolve, reject) {
-	        BX.ajax.runAction('up:tasks.task.getList', {
-	          data: {
-	            pageNumber: 1
-	          }
-	        }).then(function (response) {
+	        BX.ajax.runAction('up:tasks.task.getList').then(function (response) {
 	          var taskList = response.data.taskList;
 	          resolve(taskList);
 	        })["catch"](function (error) {
@@ -73,6 +69,11 @@ this.Up = this.Up || {};
 	        }
 	      }).then(function (response) {
 	        if (response.data != null) {
+	          for (var i = 0; i < response.data.length; i++) {
+	            if (response.data[i].code == "BX_INVALID_VALUE") {
+	              alert(response.data[i].message);
+	            }
+	          }
 	          console.error('errors:', response.data);
 	        } else {
 	          _this3.reload();
@@ -88,14 +89,14 @@ this.Up = this.Up || {};
 	      this.rootNode.innerHTML = '';
 	      var tasksContainerNode = main_core.Tag.render(_templateObject || (_templateObject = babelHelpers.taggedTemplateLiteral(["<ul class=\"task-list\"></ul>"])));
 	      this.taskList.forEach(function (taskData) {
-	        var taskNode = main_core.Tag.render(_templateObject2 || (_templateObject2 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t\t<li class=\"task-item\" data-task-id = \"", "\">\n\t\t\t\t\t<span>", "</span>\n\t\t\t\t\t<button class=\"delete-btn button is-danger\">X</button>\n\t\t\t\t</li>\n\t\t\t"])), taskData.ID, taskData.NAME);
+	        var taskNode = main_core.Tag.render(_templateObject2 || (_templateObject2 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t\t<li class=\"task-item\" data-task-id = \"", "\">\n\t\t\t\t\t<span>", "</span>\n\t\t\t\t\t<button class=\"delete-btn button is-danger\">X</button>\n\t\t\t\t</li>\n\t\t\t"])), main_core.Text.encode(taskData.ID), main_core.Text.encode(taskData.NAME));
 	        tasksContainerNode.appendChild(taskNode);
 	      });
 	      this.rootNode.appendChild(tasksContainerNode);
-	      var deleteBtns = document.querySelectorAll('.delete-btn');
-	      deleteBtns.forEach(function (btn) {
-	        btn.addEventListener('click', function () {
-	          var taskId = parseInt(btn.parentNode.getAttribute('data-task-id'));
+	      var deleteButtons = document.querySelectorAll('.delete-btn');
+	      deleteButtons.forEach(function (button) {
+	        button.addEventListener('click', function () {
+	          var taskId = parseInt(button.parentNode.getAttribute('data-task-id'));
 	          if (!isNaN(taskId)) {
 	            _this4.deleteTask(taskId);
 	          } else {
@@ -105,11 +106,10 @@ this.Up = this.Up || {};
 	      });
 	      var input = document.getElementById('task-input');
 	      var enterButton = document.getElementById('enter-button');
-	      var self = this;
 	      enterButton.addEventListener('click', function () {
 	        var inputValue = input.value;
-	        if (inputValue.trim() != '') {
-	          self.createTask(inputValue);
+	        if (inputValue.trim() !== '') {
+	          _this4.createTask(inputValue);
 	          input.value = '';
 	        }
 	      });

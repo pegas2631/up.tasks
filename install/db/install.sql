@@ -1,4 +1,3 @@
-DROP TABLE up_tasks_tasks;
 CREATE TABLE IF NOT EXISTS up_tasks_tasks
 (
 	ID INT NOT NULL AUTO_INCREMENT,

@@ -6,27 +6,14 @@ use Up\Tasks\Model\TasksTable;
 
 class Repository
 {
-	public static function getPage(int $itemsPerPage, int $pageNumber): array
+	public static function getPage(): array
 	{
-
-		if ($pageNumber>1)
-		{
-			$offset = $itemsPerPage * ($pageNumber - 1);
-		}
-		else
-		{
-			$offset = 0;
-		}
-
 		$taskList = TasksTable::getList([
 			'select' => [
 				'ID',
 				'NAME'
-			],
-			'limit' => $itemsPerPage,
-			'offset' => $offset,
+			]
 		])->fetchAll();
-
 		return $taskList;
 	}
 

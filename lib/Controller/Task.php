@@ -8,20 +8,26 @@ use Up\Tasks\Task\Repository;
 class Task extends \Bitrix\Main\Engine\Controller
 {
 
-	protected const TASK_PER_PAGE = 20;
-
-	public function getListAction(int $pageNumber = 1): ?array
+	protected function getDefaultPreFilters()
 	{
-		if ($pageNumber < 1){
-			$this->addError(new Error('pageNumber should be greater than 0', 'invalid_page_number'));
-			return null;
-		}
+		return array_merge(
+			parent::getDefaultPreFilters(),
+			[
+				new \Bitrix\Main\Engine\ActionFilter\HttpMethod(
+					[\Bitrix\Main\Engine\ActionFilter\HttpMethod::METHOD_POST]
+				),
+				new \Bitrix\Main\Engine\ActionFilter\Scope(
+					\Bitrix\Main\Engine\ActionFilter\Scope::AJAX
+				),
+			]
+		);
+	}
 
-		$taskList = Repository::getPage(self::TASK_PER_PAGE, $pageNumber);
-
+	public function getListAction(): ?array
+	{
+		$taskList = Repository::getPage();
 		return [
-			'pageNumber' => $pageNumber,
-			'taskList' => $taskList,
+			'taskList' => $taskList
 		];
 	}
 
@@ -32,7 +38,11 @@ class Task extends \Bitrix\Main\Engine\Controller
 
 	public function createTaskAction(string $name): ?array
 	{
-		return Repository::createTask($name);
+		if (!empty( trim($name)))
+		{
+			return Repository::createTask($name);
+		}
+		return null;
 	}
 }
 
